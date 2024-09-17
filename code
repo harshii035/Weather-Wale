@@ -1,0 +1,82 @@
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_Sensor.h>
+
+#include <Adafruit_BMP280.h>
+
+#define SCREEN_WIDTH 128 
+#define SCREEN_HEIGHT 64 
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+bool statusBMP = false; 
+
+
+Adafruit_BMP280 bmp; 
+
+
+void setup() {
+    Serial.begin(250000);
+
+
+void printValuesbmp() {
+    float t = bmp.readTemperature();
+    float p = bmp.readPressure() / 100;  
+    if (isnan(p) || isnan(t)) {
+        Serial.println("Failed to read from BMP280 sensor!");
+        return;  
+    }
+
+    display.clearDisplay();
+
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print("Temperature: ");
+    display.setTextSize(2);
+    display.setCursor(0, 10);
+    display.print(t, 1);  
+    display.print(" ");
+    display.setTextSize(1);
+    display.cp437(true
+    
+    statusBMP = bmp.begin(0x76);
+
+    if (statusBMP) {
+        Serial.println("BMP280 sensor found");
+    } else {
+        Serial.println("Could not find BMP280 sensor, check wiring!");
+        while (true);  
+    }
+
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3c)) {
+        Serial.println(F("SSD1306 allocation failed"));
+        while (true);  
+    }
+    display.clearDisplay();
+    display.setTextColor(WHITE);
+}
+
+
+);
+    display.write(167); 
+    display.setTextSize(2);
+    display.print("C");
+
+    display.setTextSize(1);
+    display.setCursor(0, 35);
+    display.print("Pressure: ");
+    display.setTextSize(1);
+    display.setCursor(0, 45);
+    display.print(p, 1);  
+    display.print(" hPa");  
+
+    display.display(); 
+}
+
+
+void loop() {
+    if (statusBMP) { 
+        printValuesbmp();
+    } 
+    delay(1000); 
+}
